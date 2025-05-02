@@ -1,8 +1,12 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
+use App\Models\Job;
 use Illuminate\Http\Request;
+use function PHPUnit\Framework\returnValueMap;
+
 
 class JobApplicationController extends Controller
 {
@@ -11,7 +15,9 @@ class JobApplicationController extends Controller
      */
     public function index()
     {
-        return "Iam in the index method of JobApplicationController";
+        $jobs = Job::latest()->get();
+        return view('jobs.index', compact('jobs'));
+        // return "Iam in the index method of JobApplicationController";
     }
 
     /**
@@ -19,7 +25,9 @@ class JobApplicationController extends Controller
      */
     public function create()
     {
-        return "iam in the create method of JobApplicationController";
+
+        return view('jobs.create');
+        // return "iam in the create method of JobApplicationController";
     }
 
     /**
@@ -27,7 +35,36 @@ class JobApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        return "iam in the store method of JobApplicationController";
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'salary_min' => 'nullable|numeric',
+            'salary_max' => 'nullable|numeric',
+            'deadline' => 'required|date',
+            'category' => 'required|string|max:255',
+            'employer_id' => 'required|exists:users,id', 
+            'company_logo' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+        ]);
+        if ($request->hasFile('company_logo')) {
+            $logoPath = $request->file('company_logo')->store('company_logos', 'public');
+        } else {
+            $logoPath = null;
+        }
+        Job::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'location' => $validated['location'],
+            'type' => $validated['type'],
+            'salary_min' => $validated['salary_min'],
+            'salary_max' => $validated['salary_max'],
+            'deadline' => $validated['deadline'],
+            'category' => $validated['category'],
+            'employer_id' => $validated['employer_id'],
+            'company_logo' => $logoPath,
+        ]);
+
     }
 
     /**
@@ -35,7 +72,9 @@ class JobApplicationController extends Controller
      */
     public function show(string $id)
     {
-        return "iam in the show method of JobApplicationController";
+        $job = Job::findOrFail($id);
+        return view('jobs.show',compact('job'));
+        // return "iam in the show method of JobApplicationController";
     }
 
     /**

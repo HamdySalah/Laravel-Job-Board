@@ -1,0 +1,17 @@
+[90m= [39m[34;4mApp\Models\Job[39;24m {#6441
+    [34mtitle[39m: "[32mFrontend Developer[39m",
+    [34mdescription[39m: "[32mWe are hiring a frontend developer with React knowledge.[39m",
+    [34mlocation[39m: "[32mAlexandria[39m",
+    [34mtype[39m: "[32mPart-time[39m",
+    [34msalary_min[39m: [33m4000.0[39m,
+    [34msalary_max[39m: [33m6000.0[39m,
+    [34mdeadline[39m: "[32m2025-07-01[39m",
+    [34mcategory[39m: "[32mIT[39m",
+    [34memployer_id[39m: [35m1[39m,
+    [34mis_approved[39m: [36mtrue[39m,
+    [34mcompany_logo[39m: "[32mlogo.png[39m",
+    [34mupdated_at[39m: "[32m2025-05-02 13:36:35[39m",
+    [34mcreated_at[39m: "[32m2025-05-02 13:36:35[39m",
+    [34mid[39m: [35m2[39m,
+  }
+
