@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobListingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,7 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::put('job-listings/{jobListing}/reject', [AdminController::class, 'reject'])->name('job-listings.reject');
 });
 
+// Route::get('/', function () {
+//     return view('template'); 
+// });
 Route::resource('jobs', JobApplicationController::class);
-
+Route::get('/',[TemplateController::class,'index']);
 
 require __DIR__.'/auth.php';
