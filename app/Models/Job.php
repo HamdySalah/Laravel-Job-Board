@@ -8,22 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Job extends Model
 {
     use HasFactory;
-    protected $table = 'job_posts';
+    protected $table = 'jobs';
+
+    public $timestamps = false;
 
     protected $fillable = [
-        'title',
-        'description',
-        'location',
-        'type',
-        'salary_min',
-        'salary_max',
-        'deadline',
-        'category',
-        'employer_id',
-        'is_approved',
-        'company_logo',
+        'queue',
+        'payload',
+        'attempts',
+        'reserved_at',
+        'available_at',
+        'created_at',
     ];
-
+    
     public function employer()
     {
         return $this->belongsTo(User::class, 'employer_id');
@@ -34,3 +31,4 @@ class Job extends Model
         return $this->hasMany(Application::class);
     }
 }
+
