@@ -8,11 +8,43 @@ use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/jobs', function () {
+    return view('jobs.index');
+})->middleware(['auth', 'verified'])->name('jobs.index');
+
+Route::get('/employers', function () {
+    return view('employers.details');
+})->middleware(['auth', 'verified'])->name('employers.details');
+
+Route::get('/candidates', function () {
+    return view('candidates.index');
+})->middleware(['auth', 'verified'])->name('candidates.index');
+
+Route::get('/candidate-details', function () {
+    return view('candidates.details');
+})->middleware(['auth', 'verified'])->name('candidates.details');
+
+Route::get('/blog', function () {
+    return view('blog');
+})->middleware(['auth', 'verified'])->name('blog');
+
+Route::get('/pages', function () {
+    return view('pages');
+})->middleware(['auth', 'verified'])->name('pages');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->middleware(['auth', 'verified'])->name('contact');
+
+Route::get('/about-us', function () {
+    return view('about-us');
+})->middleware(['auth', 'verified'])->name('about.us');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
