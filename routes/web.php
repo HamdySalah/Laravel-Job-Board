@@ -66,8 +66,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User Profile (All authenticated users)
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', function () {
-            if (auth()->user()->role === 'admin') {
+            $user = auth()->user();
+
+            // Redirect to role-specific profile page if available
+            if ($user->role === 'admin') {
                 return view('profile.admin-profile');
+            } elseif ($user->role === 'employer') {
+                return redirect()->route('employer.profile');
+            } elseif ($user->role === 'candidate') {
+                return redirect()->route('candidate.profile');
             } else {
                 return app()->make(ProfileController::class)->edit(request());
             }
@@ -85,8 +92,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('dashboard');
 
         // User Management
-        Route::get('/users', [AdminController::class, 'manageUsers'])
-            ->name('users.manage');
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('/', [AdminController::class, 'manageUsers'])
+                ->name('manage');
+            Route::get('/{id}/edit', [AdminController::class, 'editUser'])
+                ->name('edit');
+            Route::put('/{id}', [AdminController::class, 'updateUser'])
+                ->name('update');
+            Route::delete('/{id}', [AdminController::class, 'deleteUser'])
+                ->name('delete');
+        });
 
         // Job Management
         Route::prefix('jobs')->name('jobs.')->group(function () {

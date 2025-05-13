@@ -1,0 +1,247 @@
+/* Admin Dashboard Styles */
+
+.dashboard-container {
+    padding: 40px 0;
+}
+
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card .card-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-card .card-header h5 {
+    font-weight: 600;
+    margin: 0;
+}
+
+.dashboard-card .card-body {
+    padding: 25px;
+}
+
+.profile-summary {
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: white;
+    background-color: #6f42c1; /* Purple for admin */
+    box-shadow: 0 5px 15px rgba(111, 66, 193, 0.2);
+}
+
+.profile-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.profile-email {
+    color: #6c757d;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.stats-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.stats-item:last-child {
+    border-bottom: none;
+}
+
+.stats-label {
+    font-weight: 500;
+}
+
+.stats-value {
+    font-weight: 600;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, #6f42c1, #6610f2); /* Purple gradient for admin */
+    color: white;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.welcome-card h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.welcome-card p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.welcome-card .btn {
+    background-color: white;
+    color: #6f42c1;
+    border: none;
+    font-weight: 600;
+}
+
+.welcome-card .btn-outline-light {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+}
+
+.welcome-card .btn:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.welcome-card .btn-outline-light:hover {
+    background-color: white;
+    color: #6f42c1;
+}
+
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.quick-action-card {
+    flex: 1;
+    min-width: 200px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.quick-action-card:hover {
+    background-color: #e9ecef;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.quick-action-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #6f42c1;
+}
+
+.quick-action-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.quick-action-description {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Table styles */
+.admin-table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+.admin-table td {
+    vertical-align: middle;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-approved {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.status-admin {
+    background-color: #e2d9f3;
+    color: #6f42c1;
+}
+
+.status-employer {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.status-candidate {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 20px 0;
+    }
+    
+    .welcome-card {
+        padding: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 20px;
+    }
+    
+    .quick-action-card {
+        min-width: 100%;
+    }
+}

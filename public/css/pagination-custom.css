@@ -1,0 +1,118 @@
+/* Custom Pagination Styles */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.pagination-custom {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.pagination-custom .page-item {
+    margin: 0;
+    position: relative;
+}
+
+.pagination-custom .page-item:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pagination-custom .page-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    margin-left: 0;
+    color: var(--primary);
+    background-color: #fff;
+    border: none;
+    font-weight: 500;
+    min-width: 40px;
+    height: 45px;
+    transition: all 0.3s ease;
+}
+
+.pagination-custom .page-link:hover {
+    z-index: 2;
+    color: #fff;
+    text-decoration: none;
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.pagination-custom .page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
+}
+
+.pagination-custom .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.pagination-custom .prev-link,
+.pagination-custom .next-link {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+.pagination-custom .prev-link:hover,
+.pagination-custom .next-link:hover {
+    background-color: var(--primary);
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+/* Animation for page number hover */
+.pagination-custom .page-link:not(.prev-link):not(.next-link):hover {
+    animation: pulse 0.5s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+    .pagination-custom .page-link {
+        padding: 0.5rem 0.75rem;
+        min-width: 35px;
+        height: 35px;
+    }
+    
+    .pagination-custom .prev-link,
+    .pagination-custom .next-link {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .pagination-info {
+        font-size: 0.8rem;
+    }
+}

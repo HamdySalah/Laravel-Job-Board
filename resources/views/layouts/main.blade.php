@@ -24,6 +24,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer-custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pagination-custom.css') }}">
 
     @stack('styles')
 </head>
@@ -103,7 +104,15 @@
                                         <li><a class="dropdown-item py-2 px-3" href="{{ route('candidate.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Candidate Dashboard</a></li>
                                         <li><a class="dropdown-item py-2 px-3" href="{{ route('candidate.job-applications.index') }}"><i class="fas fa-file-alt me-2"></i> My Applications</a></li>
                                     @endif
-                                    <li><a class="dropdown-item py-2 px-3" href="{{ route('profile.edit') }}"><i class="fas fa-user-edit me-2"></i> Profile</a></li>
+                                    @if(Auth::user()->role === 'admin')
+                                        <li><a class="dropdown-item py-2 px-3" href="{{ route('profile.edit') }}"><i class="fas fa-user-edit me-2"></i> Profile</a></li>
+                                    @elseif(Auth::user()->role === 'employer')
+                                        <li><a class="dropdown-item py-2 px-3" href="{{ route('employer.profile') }}"><i class="fas fa-user-edit me-2"></i> Profile</a></li>
+                                    @elseif(Auth::user()->role === 'candidate')
+                                        <li><a class="dropdown-item py-2 px-3" href="{{ route('candidate.profile') }}"><i class="fas fa-user-edit me-2"></i> Profile</a></li>
+                                    @else
+                                        <li><a class="dropdown-item py-2 px-3" href="{{ route('profile.edit') }}"><i class="fas fa-user-edit me-2"></i> Profile</a></li>
+                                    @endif
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form method="POST" action="{{ route('logout') }}">
