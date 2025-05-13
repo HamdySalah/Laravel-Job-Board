@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class JobApplicationController extends Controller
 {
@@ -17,10 +18,12 @@ class JobApplicationController extends Controller
      */
     public function viewApplications($jobId)
     {
+        $job = Job::findOrFail($jobId);
+
         // Ensure the job belongs to the current employer
-        $job = Job::where('id', $jobId)
-            ->where('employer_id', Auth::id())
-            ->firstOrFail();
+        if ($job->employer_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $applications = Application::where('job_id', $job->id)
             ->with('candidate')
@@ -51,10 +54,23 @@ class JobApplicationController extends Controller
             return back()->with('error', 'Unauthorized action.');
         }
 
+        // Update the application status
         $application->status = $request->status;
         $application->save();
 
-        return back()->with('success', 'Application status updated successfully.');
+        // Add notification logic here if needed
+        // For example, notify the candidate when their application status changes
+        // Notification::send($application->candidate, new ApplicationStatusChanged($application));
+
+        $statusMessages = [
+            'reviewing' => 'Application marked as under review.',
+            'interviewed' => 'Application marked as interviewed.',
+            'accepted' => 'Application has been accepted.',
+            'rejected' => 'Application has been rejected.'
+        ];
+
+        $message = $statusMessages[$request->status] ?? 'Application status updated successfully.';
+        return back()->with('success', $message);
     }
 
     /**

@@ -23,6 +23,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/footer-custom.css') }}">
 
     @stack('styles')
 </head>
@@ -144,7 +145,7 @@
         @yield('content')
     </main>
 
-    <footer class="bg-gradient text-white py-5 mt-5">
+    <footer class="bg-gradient-custom text-white py-5 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4 mb-lg-0">
