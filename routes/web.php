@@ -65,8 +65,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User Profile (All authenticated users)
     Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])
-            ->name('edit');
+        Route::get('/', function () {
+            if (auth()->user()->role === 'admin') {
+                return view('profile.admin-profile');
+            } else {
+                return app()->make(ProfileController::class)->edit(request());
+            }
+        })->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])
             ->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])
@@ -139,10 +144,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('application.update-status');
     });
 
+    // New route for adding a job post
+    Route::get('/add_post', [JobListingController::class, 'create'])
+        ->middleware('role:employer')
+        ->name('job-listings.create');
+
     // Job Listings Management (for employers)
-    Route::resource('job-listings', JobListingController::class)
-        ->except(['index', 'show'])
-        ->middleware('role:employer');
+    Route::prefix('job-listings')->name('job-listings.')->middleware('role:employer')->group(function () {
+        Route::post('/', [JobListingController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [JobListingController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [JobListingController::class, 'update'])->name('update');
+        Route::delete('/{id}', [JobListingController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Include Auth Routes

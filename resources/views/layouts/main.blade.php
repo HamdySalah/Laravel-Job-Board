@@ -97,7 +97,7 @@
                                         <li><a class="dropdown-item py-2 px-3" href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard</a></li>
                                     @elseif(Auth::user()->role === 'employer')
                                         <li><a class="dropdown-item py-2 px-3" href="{{ route('employer.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Employer Dashboard</a></li>
-                                        <li><a class="dropdown-item py-2 px-3" href="{{ route('job-listings.create') }}"><i class="fas fa-plus-circle me-2"></i> Post a Job</a></li>
+                                        <li><a class="dropdown-item py-2 px-3" href="{{ url('/add_post') }}"><i class="fas fa-plus-circle me-2"></i> Post a Job</a></li>
                                     @elseif(Auth::user()->role === 'candidate')
                                         <li><a class="dropdown-item py-2 px-3" href="{{ route('candidate.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i> Candidate Dashboard</a></li>
                                         <li><a class="dropdown-item py-2 px-3" href="{{ route('candidate.job-applications.index') }}"><i class="fas fa-file-alt me-2"></i> My Applications</a></li>
@@ -177,7 +177,7 @@
                     <ul class="list-unstyled footer-links">
                         <li class="mb-2"><a href="{{ route('register') }}" class="footer-link"><i class="fas fa-chevron-right me-1"></i> Register</a></li>
                         <li class="mb-2"><a href="{{ route('login') }}" class="footer-link"><i class="fas fa-chevron-right me-1"></i> Login</a></li>
-                        <li class="mb-2"><a href="{{ route('job-listings.create') }}" class="footer-link"><i class="fas fa-chevron-right me-1"></i> Post a Job</a></li>
+                        <li class="mb-2"><a href="{{ url('/add_post') }}" class="footer-link"><i class="fas fa-chevron-right me-1"></i> Post a Job</a></li>
                         <li><a href="#" class="footer-link"><i class="fas fa-chevron-right me-1"></i> Pricing</a></li>
                     </ul>
                 </div>
@@ -243,7 +243,7 @@
 
     <!-- Floating action button for job posting -->
     <div class="floating-action-btn">
-        <a href="{{ route('job-listings.create') }}" class="btn btn-primary btn-lg rounded-circle shadow-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="Post a Job">
+        <a href="{{ url('/add_post') }}" class="btn btn-primary btn-lg rounded-circle shadow-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="Post a Job">
             <i class="fas fa-plus"></i>
         </a>
     </div>

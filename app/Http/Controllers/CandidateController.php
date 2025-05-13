@@ -121,9 +121,9 @@ class CandidateController extends Controller
 
         $candidate = Auth::user();
 
-        // Update basic profile information
+        // Update basic profile information - exclude phone and location to avoid errors
         $candidate->fill($request->only([
-            'name', 'email', 'phone', 'location', 'skills', 'experience', 'bio'
+            'name', 'email', 'skills', 'experience', 'bio'
         ]));
 
         // Handle profile picture upload
