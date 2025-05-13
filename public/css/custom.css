@@ -586,6 +586,7 @@ a:hover {
     margin: -3rem 0 3rem;
     position: relative;
     z-index: 2;
+    display: none;
 }
 
 .stat-item {

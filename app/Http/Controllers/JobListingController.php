@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\User;
+use App\Notifications\NewJobCreated;
+use App\Notifications\NewJobPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class JobListingController extends Controller
@@ -173,6 +177,13 @@ class JobListingController extends Controller
             'employer_id' => Auth::id(),
             'company_logo' => $companyLogo,
         ]);
+
+        // Load the employer relationship for notifications
+        $job->load('employer');
+
+        // Notify admins about the new job posting
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new NewJobCreated($job));
 
         return redirect()->route('employer.dashboard')
             ->with('success', 'Your job listing has been submitted and is pending approval.');

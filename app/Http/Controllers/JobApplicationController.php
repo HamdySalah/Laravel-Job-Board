@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Job;
 use App\Models\Application;
+use App\Models\User;
+use App\Notifications\NewApplicationReceived;
+use App\Notifications\ApplicationStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 
 class JobApplicationController extends Controller
 {
@@ -58,9 +62,8 @@ class JobApplicationController extends Controller
         $application->status = $request->status;
         $application->save();
 
-        // Add notification logic here if needed
-        // For example, notify the candidate when their application status changes
-        // Notification::send($application->candidate, new ApplicationStatusChanged($application));
+        // Notify the candidate when their application status changes
+        $application->candidate->notify(new ApplicationStatusChanged($application));
 
         $statusMessages = [
             'reviewing' => 'Application marked as under review.',
@@ -138,13 +141,17 @@ class JobApplicationController extends Controller
 
             // Create application with try-catch to handle database errors
             try {
-                Application::create([
+                $application = Application::create([
                     'job_id' => $job->id,
                     'candidate_id' => Auth::id(),
                     'resume_path' => $candidate->resume_path,
                     'message' => $message,
                     'status' => 'pending'
                 ]);
+
+                // Notify the employer about the new application
+                $employer = User::find($job->employer_id);
+                $employer->notify(new NewApplicationReceived($application));
 
                 return back()->with('success', 'Your application has been submitted successfully.');
             } catch (\Exception $e) {
@@ -222,13 +229,17 @@ class JobApplicationController extends Controller
 
             // Create application with try-catch to handle database errors
             try {
-                Application::create([
+                $application = Application::create([
                     'job_id' => $job->id,
                     'candidate_id' => Auth::id(),
                     'resume_path' => $resumePath,
                     'message' => $request->message,
                     'status' => 'pending'
                 ]);
+
+                // Notify the employer about the new application
+                $employer = User::find($job->employer_id);
+                $employer->notify(new NewApplicationReceived($application));
 
                 return back()->with('success', 'Your application has been submitted successfully.');
             } catch (\Exception $e) {

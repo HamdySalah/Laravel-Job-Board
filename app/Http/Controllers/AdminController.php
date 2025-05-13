@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 use App\Models\User;
 use App\Models\Application;
+use App\Notifications\NewJobPosted;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class AdminController extends Controller
 {
@@ -134,9 +136,21 @@ class AdminController extends Controller
      */
     public function approveJob($id)
     {
-        $job = Job::findOrFail($id);
+        $job = Job::with('employer')->findOrFail($id);
         $job->is_approved = true;
         $job->save();
+
+        // Notify candidates who might be interested in this job category
+        $interestedCandidates = User::where('role', 'candidate')
+            ->where(function($query) use ($job) {
+                // This is a simplified approach. In a real app, you might have a user_preferences table
+                // or use a more sophisticated matching algorithm
+                $query->where('skills', 'like', "%{$job->category}%")
+                      ->orWhere('bio', 'like', "%{$job->category}%");
+            })
+            ->get();
+
+        Notification::send($interestedCandidates, new NewJobPosted($job));
 
         return redirect()->route('admin.jobs.pending')
             ->with('success', "Job '{$job->title}' has been approved and is now visible to candidates.");

@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EmployersViewController;
+use App\Http\Controllers\NotificationController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -83,6 +84,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])
             ->name('destroy');
+    });
+
+    // Notifications
+    Route::prefix('notifications')->name('notifications.')->middleware('auth')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{id}', [NotificationController::class, 'delete'])->name('delete');
+        Route::delete('/', [NotificationController::class, 'deleteAll'])->name('delete-all');
+        Route::get('/unread', [NotificationController::class, 'getUnreadNotifications'])->name('unread');
     });
 
     // Admin Routes

@@ -88,8 +88,11 @@
                         </li>
                     </ul>
 
-                    <div class="d-flex">
+                    <div class="d-flex align-items-center">
                         @auth
+                            <!-- Notification Dropdown -->
+                            @include('components.notification-dropdown')
+
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
@@ -263,6 +266,11 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('js/custom.js') }}"></script>
+
+    @auth
+    <!-- Notifications JS -->
+    <script src="{{ asset('js/notifications.js') }}"></script>
+    @endauth
 
     @stack('scripts')
 </body>
