@@ -11,8 +11,11 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EmployersViewController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
+use App\Models\Conversation;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,7 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User Profile (All authenticated users)
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', function () {
-            $user = auth()->user();
+            $user = Auth::user();
 
             // Redirect to role-specific profile page if available
             if ($user->role === 'admin') {
@@ -182,7 +185,50 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{id}', [JobListingController::class, 'update'])->name('update');
         Route::delete('/{id}', [JobListingController::class, 'destroy'])->name('destroy');
     });
+
+    // Chat Routes
+    Route::prefix('chat')->name('chat.')->middleware('auth')->group(function () {
+        Route::get('/', [ChatController::class, 'index'])->name('index');
+
+        // Debug routes - only in local environment
+        if (app()->environment('local')) {
+            Route::get('/debug', function () {
+                $user = Auth::user();
+                $conversations = Conversation::where(function($query) use ($user) {
+                    $query->where('employer_id', $user->id)
+                          ->orWhere('candidate_id', $user->id);
+                })->with(['employer', 'candidate', 'messages'])->get();
+
+                return view('chat.debug', [
+                    'user' => $user,
+                    'conversations' => $conversations
+                ]);
+            })->name('debug');
+
+            Route::get('/debug/users', function () {
+                $user = Auth::user();
+                $role = $user->role === 'employer' ? 'candidate' : 'employer';
+                $users = \App\Models\User::where('role', $role)->get(['id', 'name', 'email', 'role']);
+
+                return response()->json([
+                    'current_user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'role' => $user->role
+                    ],
+                    'target_role' => $role,
+                    'users' => $users
+                ]);
+            })->name('debug.users');
+        }
+    });
 });
 
 // Include Auth Routes
 require __DIR__.'/auth.php';
+
+// Test image display
+Route::get('/test-image', function() {
+    return view('test-image');
+});
