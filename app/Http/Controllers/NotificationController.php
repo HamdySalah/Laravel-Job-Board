@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,16 +10,14 @@ use Illuminate\View\View;
 
 class NotificationController extends Controller
 {
-    public function __construct(
-        private readonly NotificationService $notificationService
-    ) {}
-
     /**
      * Display a listing of the user's notifications.
      */
     public function index(): View
     {
-        $notifications = $this->notificationService->getPaginatedNotifications(Auth::user(), 10);
+        $user = Auth::user();
+        $notifications = $user->notifications()->paginate(10);
+
         return view('notifications.index', compact('notifications'));
     }
     
@@ -29,12 +26,10 @@ class NotificationController extends Controller
      */
     public function markAsRead(string $id): RedirectResponse
     {
-        try {
-            $this->notificationService->markAsRead(Auth::user(), $id);
-            return redirect()->back()->with('success', 'Notification marked as read.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to mark notification as read.');
-        }
+        $notification = Auth::user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        return redirect()->back()->with('success', 'Notification marked as read.');
     }
 
     /**
@@ -42,12 +37,9 @@ class NotificationController extends Controller
      */
     public function markAllAsRead(): RedirectResponse
     {
-        try {
-            $this->notificationService->markAllAsRead(Auth::user());
-            return redirect()->back()->with('success', 'All notifications marked as read.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to mark all notifications as read.');
-        }
+        Auth::user()->unreadNotifications->markAsRead();
+
+        return redirect()->back()->with('success', 'All notifications marked as read.');
     }
 
     /**
@@ -55,12 +47,10 @@ class NotificationController extends Controller
      */
     public function delete(string $id): RedirectResponse
     {
-        try {
-            $this->notificationService->deleteNotification(Auth::user(), $id);
-            return redirect()->back()->with('success', 'Notification deleted.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete notification.');
-        }
+        $notification = Auth::user()->notifications()->findOrFail($id);
+        $notification->delete();
+
+        return redirect()->back()->with('success', 'Notification deleted.');
     }
 
     /**
@@ -68,12 +58,9 @@ class NotificationController extends Controller
      */
     public function deleteAll(): RedirectResponse
     {
-        try {
-            $this->notificationService->deleteAllNotifications(Auth::user());
-            return redirect()->back()->with('success', 'All notifications deleted.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete all notifications.');
-        }
+        Auth::user()->notifications()->delete();
+
+        return redirect()->back()->with('success', 'All notifications deleted.');
     }
 
     /**
@@ -82,11 +69,18 @@ class NotificationController extends Controller
     public function getUnreadNotifications(): JsonResponse
     {
         $user = Auth::user();
-        $unreadNotifications = $this->notificationService->getUnreadNotifications($user, 5);
+        $unreadNotifications = $user->unreadNotifications;
 
         return response()->json([
-            'count' => $this->notificationService->getNotificationCounts($user)['unread'],
-            'notifications' => $this->notificationService->formatNotificationsForApi($unreadNotifications)
+            'count' => $unreadNotifications->count(),
+            'notifications' => $unreadNotifications->take(5)->map(function ($notification) {
+                return [
+                    'id' => $notification->id,
+                    'data' => $notification->data,
+                    'created_at' => $notification->created_at->diffForHumans(),
+                    'read_at' => $notification->read_at
+                ];
+            })
         ]);
     }
 }
